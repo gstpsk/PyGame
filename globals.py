@@ -11,6 +11,11 @@ CAPTION = "Bongo sauce"
 BG = (1, 9, 22)
 WHITE = (255, 255, 255)
 
+# Load fonts
+pygame.font.init()
+DEATH_FONT = pygame.font.Font(os.path.join('Assets', 'fonts', 'StalinistOne-Regular.ttf'), 64)
+MAIN_FONT = pygame.font.SysFont('Source Code Pro', 20)
+
 # Sprite dimensions
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 64, 64
 
@@ -18,6 +23,7 @@ SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 64, 64
 BACKGROUND_IMAGE = pygame.image.load(os.path.join('Assets', 'Nebula.png'))
 SPACESHIPS_IMAGE = pygame.image.load(os.path.join('Assets', 'BlueRedGreen_Spacecraft_V1.0.png'))
 FRIENDLY_PARTICLE_IMAGE = pygame.image.load(os.path.join('Assets', 'PNG_Animations', 'Shots', 'Shot4', 'shot4_exp3.png'))
+ENEMY1_IMAGE = pygame.image.load(os.path.join('Assets', 'PNG_Parts&Spriter_Animation', 'Ship1', 'Ship1.png'))
 
 # Create surfaces
 size = width, height = (32, 32)
@@ -35,3 +41,11 @@ BACKGROUND = pygame.transform.scale(BACKGROUND_IMAGE, (WIDTH, HEIGHT))
 BLUE_SPACESHIP = pygame.transform.scale(BLUE_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
 RED_SPACESHIP = pygame.transform.scale(RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
 FRIENDLY_PARTICLE = pygame.transform.scale(FRIENDLY_PARTICLE_IMAGE, (32, 32))
+ENEMY1 = pygame.transform.scale(ENEMY1_IMAGE, (64, 64))
+
+WAVE_LEN = 5
+ENEMY_VEL = 5
+LEVEL = 0
+LIVES = 5
+GAME_OVER = False
+GAME_OVER_COUNT = 0
