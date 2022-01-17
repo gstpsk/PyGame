@@ -1,5 +1,7 @@
 import pygame
 import random
+import os
+import sys
 
 import globals
 import ship
@@ -18,8 +20,9 @@ def main():
         clock = pygame.time.Clock()
         globals.PAUSED = False 
         globals.DEATH_ANIMATION = 0
-        print(f"clearing {len(enemies)} enemies")
         enemies.clear()
+        if globals.LEVEL > 0:
+            globals.LEVEL -= 1
         run = True
         while run:  # Main game loop
             # Set FPS
@@ -60,9 +63,10 @@ def main():
             if player.dead:
                 globals.PAUSED = True
                 globals.LIVES += -1
+                continue
 
             # Increment level when all enemies have been killed
-            if len(enemies) == 0:
+            if len(enemies) == 0 and not player.dead:
                 globals.LEVEL += 1
                 globals.WAVE_LEN += 1
                 for i in range(globals.WAVE_LEN):
@@ -76,12 +80,16 @@ def main():
             # Move enemies and make 'em shoot
             for enemy in enemies: # loop through copy of array
                 enemy.move(globals.ENEMY_VEL)
-                prob = round(globals.FPS*4/len(enemies))
+                prob = round(globals.FPS*8/len(enemies))
                 if random.randrange(0, prob) == 1:
                     enemy.shoot()
+                if enemy.isDead and enemy.anim_counter >= len(globals.EXPLOSION_SPRITE):
+                    enemies.remove(enemy) # Remove dead enemies from enemies
+                    #print("Removed enemy")
                 if enemy.y + 64 > globals.HEIGHT: # Kill off-screen enemies
                     globals.LIVES -= 1
                     enemies.remove(enemy)
+            
 
     
     print("Thanks for playing!")
@@ -148,6 +156,15 @@ def handle_movement(keys_pressed, player):
                 player.x += globals.VELOCITY
         if keys_pressed[pygame.K_SPACE]: # SPACE
             player.shoot()
+
+def resource_path(relative_path):
+    try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 # Only run if executed directly
 if __name__ == "__main__":

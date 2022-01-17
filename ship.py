@@ -14,9 +14,17 @@ class Ship:
         self.particle_image = None
         self.particles = []
         self.cooldown_counter = 0
+        self.isDead = False
+        self.anim_counter = 0
 
     def draw(self, window):
-        window.blit(self.ship_image, (self.x, self.y))
+        if self.isDead:
+            if not (self.anim_counter >= len(globals.EXPLOSION_SPRITE)):
+                img = globals.EXPLOSION_SPRITE[self.anim_counter]
+                window.blit(img, (self.x, self.y))
+                self.anim_counter += 1
+        else:
+            window.blit(self.ship_image, (self.x, self.y))
         for particle in self.particles:
             particle.draw(window)
 
@@ -65,12 +73,12 @@ class Player(Ship):
         for particle in self.particles[:]:
             particle.move(vel)
             if particle.off_screen():
-                print("OFFSCREWEN!!")
                 self.particles.remove(particle)
             else:
                 for obj in objs:
                     if particle.collision(obj):
-                        objs.remove(obj) # Remove the enemy from enemies
+                        # Mark ship as dead an wait for it's death animation
+                        obj.isDead = True
                         self.particles.remove(particle)
 
 class Enemy(Ship):
